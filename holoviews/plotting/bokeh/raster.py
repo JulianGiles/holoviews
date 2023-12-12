@@ -245,9 +245,7 @@ class ImageStackPlot(RasterPlot):
 
     def _get_colormapper(self, eldim, element, ranges, style, factors=None,
                          colors=None, group=None, name='color_mapper'):
-        dict_cmap = False
-        if isinstance(style.get("cmap"), dict):
-            dict_cmap = style["cmap"]
+        if isinstance(dict_cmap := style.get("cmap"), dict):
             style["cmap"] = list(dict_cmap.values())
             missing = set(map(str, element.vdims)) - dict_cmap.keys()
             if missing:
@@ -262,7 +260,8 @@ class ImageStackPlot(RasterPlot):
             colors=colors, group=group, name=name
         )
         if dict_cmap:
-            indices = [list(dict_cmap).index(vd.name) for vd in element.vdims]
+            keys_cmap = list(dict_cmap)
+            indices = [keys_cmap.index(vd.name) for vd in element.vdims]
         else:
             num_elements = len(element.vdims)
             step_size = len(cmapper.palette) // num_elements
